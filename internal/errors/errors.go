@@ -11,10 +11,3 @@ func ServerResponseError(w http.ResponseWriter, err error) {
 		w.WriteHeader(500)
 	}
 }
-
-func ServerNotFoundError(w http.ResponseWriter, err error) {
-	err = helpers.WriteJSON(w, err.Error(), http.StatusNotFound)
-	if err != nil {
-		w.WriteHeader(500)
-	}
-}

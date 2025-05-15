@@ -8,8 +8,9 @@ import (
 
 func Routes(app *api.Application) *httprouter.Router {
 	router := httprouter.New()
-
+	
 	router.HandlerFunc(http.MethodPost, "/url/short/", app.UrlShorterHandler)
+	router.HandlerFunc(http.MethodGet, "/:shortUrl", app.RedirectLongUrlHandler)
 
 	return router
 }
