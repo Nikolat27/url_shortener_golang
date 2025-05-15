@@ -12,6 +12,7 @@ github-push:
 	@echo "pushing to GitHub..."
 	@echo "" 
 	@git push https://${GITHUB_USERNAME}:${GITHUB_PAT}@github.com/${GITHUB_USERNAME}/${GITHUB_REPO_NAME} master
+	@echo ""
 
 short-url:
 	curl -X POST 'http://localhost:8000/url/short/' -H "Content-Type: application/json" -d '{"longUrl": "https://music.youtube.com/watch?v=NFODb2JRXBI&list=RDAMVMNFODb2JRXBI"}'
