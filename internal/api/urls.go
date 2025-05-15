@@ -1,21 +1,13 @@
 package api
 
 import (
-	"database/sql"
-	"fmt"
+	"log/slog"
 	"math/rand"
 	"net/http"
+	"url_shortener/internal/data"
 	"url_shortener/internal/errors"
 	"url_shortener/internal/helpers"
 )
-
-type Url struct {
-	LongUrl string `json:"longUrl"`
-}
-
-type SqlDB struct {
-	DB *sql.DB	
-}
 
 func generateShortUrl(length int) string {
 	characters := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -26,15 +18,32 @@ func generateShortUrl(length int) string {
 	return string(b)
 }
 
-func (s SqlDB) UrlShortHandler(w http.ResponseWriter, r *http.Request) {
-	var url Url
+func (app *Application) UrlShorterHandler(w http.ResponseWriter, r *http.Request) {
+	var input struct {
+		LongUrl string `json:"longUrl"`
+	}
 
-	err := helpers.DeSerializeJSON(r.Body, 10000, &url)
+	err := helpers.DeSerializeJSON(r.Body, 10000, &input)
 	if err != nil {
 		errors.ServerResponseError(w, err)
 		return
 	}
 
 	shortUrl := generateShortUrl(8)
-	fmt.Println(shortUrl)
+
+	url := &data.Url{
+		LongUrl: input.LongUrl,
+		ShortUrl: shortUrl,
+	}
+	
+	err = app.Models.Urls.Insert(url)
+	if err != nil {
+		errors.ServerResponseError(w, err)
+		return
+	}
+	
+	err = helpers.WriteJSON(w, "Done!", 200)
+	if err != nil {
+		slog.Error("write json", "error", err)
+	}
 }

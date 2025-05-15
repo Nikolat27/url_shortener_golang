@@ -11,9 +11,9 @@ type UrlModel struct {
 }
 
 type Url struct {
-	longUrl   string
-	shortUrl  string
-	createdAt time.Time
+	LongUrl   string
+	ShortUrl  string
+	CreatedAt time.Time
 }
 
 func (u *UrlModel) Insert(url *Url) error {
@@ -21,7 +21,7 @@ func (u *UrlModel) Insert(url *Url) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	_, err := u.db.ExecContext(ctx, query, url.longUrl, url.shortUrl, url.createdAt)
+	_, err := u.db.ExecContext(ctx, query, url.LongUrl, url.ShortUrl, url.CreatedAt)
 	return err
 }
 
@@ -32,7 +32,7 @@ func (u *UrlModel) Get(shortUrl string) (*Url, error) {
 	defer cancel()
 
 	var url Url
-	err := u.db.QueryRowContext(ctx, query, shortUrl).Scan(&url.longUrl)
+	err := u.db.QueryRowContext(ctx, query, shortUrl).Scan(&url.LongUrl)
 	if err != nil {
 		return nil, err
 	}

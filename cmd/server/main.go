@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"url_shortener/internal/api"
+	"url_shortener/internal/data"
 	"url_shortener/internal/routes"
 )
 
@@ -18,11 +19,14 @@ func main() {
 	}
 	defer db.Close()
 
-	var sqlDB api.SqlDB
-	sqlDB.DB = db
+	models := data.NewModels(db)
+	app := api.Application{
+		Models: models,
+	}
+
 	server := &http.Server{
 		Addr:    ":8000",
-		Handler: routes.Routes(&sqlDB),
+		Handler: routes.Routes(&app),
 	}
 
 	err = server.ListenAndServe()

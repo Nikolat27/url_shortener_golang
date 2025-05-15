@@ -9,7 +9,7 @@ import (
 func WriteJSON(w http.ResponseWriter, msg string, statusCode int) error {
 	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write([]byte(msg))
+	_, err := w.Write([]byte(msg + "\n"))
 	return err
 }
 
