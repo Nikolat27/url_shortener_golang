@@ -9,8 +9,12 @@ import (
 	"url_shortener/internal/helpers"
 )
 
+const (
+	baseUrl = "http://localhost:8000/"
+	characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+)
+
 func generateShortUrl(length int) string {
-	characters := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	b := make([]byte, length)
 	for i := range b {
 		b[i] = characters[rand.Intn(len(characters))]
@@ -32,18 +36,31 @@ func (app *Application) UrlShorterHandler(w http.ResponseWriter, r *http.Request
 	shortUrl := generateShortUrl(8)
 
 	url := &data.Url{
-		LongUrl: input.LongUrl,
+		LongUrl:  input.LongUrl,
 		ShortUrl: shortUrl,
 	}
-	
+
 	err = app.Models.Urls.Insert(url)
 	if err != nil {
 		errors.ServerResponseError(w, err)
 		return
 	}
-	
-	err = helpers.WriteJSON(w, "Done!", 200)
+
+	resp := baseUrl + url.ShortUrl
+	err = helpers.WriteJSON(w, resp, http.StatusCreated)
 	if err != nil {
 		slog.Error("write json", "error", err)
 	}
+}
+
+func (app *Application) RedirectLongUrlHandler(w http.ResponseWriter, r *http.Request) {
+	shortUrl := r.URL.Path[1:]
+
+	url, err := app.Models.Urls.Get(shortUrl)
+	if err != nil {
+		errors.ServerResponseError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, url.LongUrl, http.StatusPermanentRedirect)
 }
