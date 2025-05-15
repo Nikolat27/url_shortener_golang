@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -12,6 +13,10 @@ type Url struct {
 	LongUrl string `json:"longUrl"`
 }
 
+type SqlDB struct {
+	DB *sql.DB	
+}
+
 func generateShortUrl(length int) string {
 	characters := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	b := make([]byte, length)
@@ -21,7 +26,7 @@ func generateShortUrl(length int) string {
 	return string(b)
 }
 
-func UrlShortHandler(w http.ResponseWriter, r *http.Request) {
+func (s SqlDB) UrlShortHandler(w http.ResponseWriter, r *http.Request) {
 	var url Url
 
 	err := helpers.DeSerializeJSON(r.Body, 10000, &url)

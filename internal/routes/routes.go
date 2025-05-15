@@ -6,9 +6,8 @@ import (
 	"url_shortener/internal/api"
 )
 
-func Routes() *httprouter.Router {
+func Routes(db *api.SqlDB) *httprouter.Router {
 	router := httprouter.New()
-
-	router.HandlerFunc(http.MethodPost, "/url/short/", api.UrlShortHandler)
+	router.HandlerFunc(http.MethodPost, "/url/short/", db.UrlShortHandler)
 	return router
 }

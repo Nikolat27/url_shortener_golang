@@ -2,31 +2,29 @@ package main
 
 import (
 	"database/sql"
+	_ "github.com/lib/pq"
 	"log"
 	"net/http"
 	"os"
+	"url_shortener/internal/api"
 	"url_shortener/internal/routes"
 )
 
 func main() {
-	server := &http.Server{
-		Addr:    ":8000",
-		Handler: routes.Routes(),
-	}
-
 	dsn := os.Getenv("DB_DSN")
 	db, err := initDB(dsn)
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
-	err = db.Ping()
-	if err != nil {
-		log.Println(err)
-		return
+	var sqlDB api.SqlDB
+	sqlDB.DB = db
+	server := &http.Server{
+		Addr:    ":8000",
+		Handler: routes.Routes(&sqlDB),
 	}
-	
-	
+
 	err = server.ListenAndServe()
 	if err != nil {
 		log.Println("server listening error: ", err)
@@ -38,6 +36,9 @@ func initDB(dsn string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
+	err = db.Ping()
+	if err != nil {
+		return nil, err
+	}
 	return db, err
 }
