@@ -17,11 +17,11 @@ type Url struct {
 }
 
 func (u *UrlModel) Insert(url *Url) error {
-	query := `INSERT INTO urls (longUrl, shortUrl, createdAt) VALUES ($1, $2, $3)`
+	query := `INSERT INTO urls (longUrl, shortUrl) VALUES ($1, $2)`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	_, err := u.db.ExecContext(ctx, query, url.LongUrl, url.ShortUrl, url.CreatedAt)
+	_, err := u.db.ExecContext(ctx, query, url.LongUrl, url.ShortUrl)
 	return err
 }
 
