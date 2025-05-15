@@ -9,4 +9,4 @@ url-request:
 github-push:
 	@echo "pushing to GitHub..."
 	@echo "" 
-	@git push https://${GITHUB_USERNAME}:${GITHUB_PAT}@github.com/${GITHUB_REPO_NAME} master
+	@git push https://${GITHUB_USERNAME}:${GITHUB_PAT}@github.com/${GITHUB_USERNAME}/${GITHUB_REPO_NAME} master
