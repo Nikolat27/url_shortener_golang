@@ -25,6 +25,8 @@ func generateShortUrl(length int) string {
 func (app *Application) UrlShorterHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		LongUrl string `json:"longUrl"`
+		Password string `json:"password"`
+		MaxUsage int `json:"max_usage"`
 	}
 
 	err := helpers.DeSerializeJSON(r.Body, 10000, &input)

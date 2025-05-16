@@ -15,7 +15,7 @@ github-push:
 	@echo ""
 
 short-url:
-	curl -X POST 'http://localhost:8000/url/short/' -H "Content-Type: application/json" -d '{"longUrl": "https://music.youtube.com/watch?v=NFODb2JRXBI&list=RDAMVMNFODb2JRXBI"}'
+	curl -X POST 'http://localhost:8000/url/short/' -H "Content-Type: application/json" -d '{"longUrl": "https://music.youtube.com/watch?v=NFODb2JRXBI"}'
 
 get-long-url:
 	@echo "Enter the short URL:"

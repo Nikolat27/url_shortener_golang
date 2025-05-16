@@ -17,7 +17,7 @@ type Url struct {
 }
 
 func (u *UrlModel) Insert(url *Url) error {
-	query := `INSERT INTO urls (longUrl, shortUrl) VALUES ($1, $2)`
+	query := `INSERT INTO urls (long_url, short_url) VALUES ($1, $2)`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -26,7 +26,7 @@ func (u *UrlModel) Insert(url *Url) error {
 }
 
 func (u *UrlModel) Get(shortUrl string) (*Url, error) {
-	query := `SELECT longUrl FROM urls WHERE shortUrl = $1`
+	query := `SELECT long_url FROM urls WHERE short_url = $1`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
